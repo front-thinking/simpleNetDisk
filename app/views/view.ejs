@@ -1,0 +1,147 @@
+<!doctype html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>书 库</title>
+        <link rel="stylesheet" href="./css/bootstrap.css">
+        <link rel="stylesheet" href="./css/font-awesome.css">
+        <link rel="stylesheet" href="./css/style.css">
+    </head>
+
+    <body>
+        <nav class="navbar navbar-inverse navbar-custom" role="navigation">
+            <div class="container">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/">书 库</a>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li class="active">
+                        <a href="/">首页</a>
+                        </li>
+                        <li>
+                            <a href="/#">最新</a>
+                        </li>
+                        <li>
+                            <a href="/#">热门</a>
+                        </li>
+                        <li>
+                            <a href="/#">讨论</a>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right ">
+                        <li>
+                            <a href="#">关于</a>
+                        </li>
+                        <li>
+                            <a href="#">帮助</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="container">
+            <ol class="breadcrumb">
+                <li>
+                    <a href="/">首页</a>
+                </li>
+                <li class="active">书籍详情</li>
+            </ol>
+            <div class="row content-wrap container">
+                <div class="panel panel-default panel-view">
+                    <div class="panel-heading">
+                        <strong>基本信息</strong>
+                    </div>
+                    <% book.bookInfo = book.bookInfo  || {} %>
+                    <div class="panel-body">
+                        <table class="table table-striped view-table">
+                            <tbody>
+                                <tr>
+                                    <td width="20" class="text-right">
+                                        <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>
+                                    </td>
+                                    <td class="text-right" width="100">书名：</td>
+                                    <td class="text-left">
+                                        <%= book.bookInfo.title %>
+                                    </td>
+                                    <td width="20" class="text-right">
+                                        <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>
+                                    </td>
+                                    <td class="text-right" width="100">作者：</td>
+                                    <td class="text-left" colspan='4'>
+                                        <%=book.bookInfo.author && book.bookInfo.author.join("/")%>
+                                    </td>
+                                    <td width="50" class="book-image" rowspan="3">
+                                        <img src="<%= book.bookInfo.image %>" alt="">
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td width="20" class="text-right">
+                                        <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>
+                                    </td>
+                                    <td width="100" class="text-right">出版社：</td>
+                                    <td class="text-left" width='200'> <%= book.bookInfo.publisher %></td>
+                                    <td width="20" class="text-right">
+                                        <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>
+                                    </td>
+                                    <td width="70" class="text-right">出版年：</td>
+                                    <td class="text-left"><%= book.bookInfo.pubdate %></td>
+                                </tr>
+                                <tr>
+                                    <td width="20" class="text-right">
+                                        <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>
+                                    </td>
+                                    <td class="text-right">页数：</td>
+                                    <td class="text-left" ><%= book.bookInfo.pages %></td>
+                                    <td width="20" class="text-right">
+                                        <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>
+                                    </td>
+                                    <td class="text-right">定价：</td>
+                                    <td class="text-left" colspan='4'><%= book.bookInfo.price %></td>
+                                </tr>
+                                <tr>
+                                    <td width="20" class="text-right">
+                                        <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>
+                                    </td>
+                                    <td class="text-right">装帧：</td>
+                                    <td class="text-left" ><%= book.bookInfo.binding %></td>
+                                    <td width="20" class="text-right">
+                                        <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>
+                                    </td>
+                                    <td class="text-right">ISBN：</td>
+                                    <td class="text-left" ><%= book.bookInfo.isbn13 %></td>
+                                </tr>
+                            </tbody>
+                            </table>
+                    </div>
+                </div>
+                <div class="panel panel-default panel-view">
+                    <div class="panel-heading">
+                        <strong>内容简介</strong>
+                    </div>
+                    <div class="panel-body">
+                        <div class="book-summary">
+                            <%= book.bookInfo.summary %>
+                        </div>
+
+                    </div>
+                </div>
+                <p class="declaration">以上信息均来自<a href="http://www.douban.com" target = "_blank">豆瓣</a></p>
+            </div>
+        </div>
+        <script src="./js/jquery.js"></script>
+        <script src="./js/bootstrap.js"></script>
+        <script src="./js/view.js"></script>
+    </body>
+
+</html>

@@ -1,0 +1,99 @@
+/*functional css*/
+.no-padding{
+    padding: 0;
+}
+/*layout*/
+.index_background {
+    background-image: url(/images/background.jpg);
+    height: 100vh;
+}
+.mynav.container-fluid {
+    position: absolute;
+    width: 100%;
+    height: 50px;
+    background: rgba(0,0,0,0.8);
+    color: #fff;
+    z-index: 100;
+    line-height: 50px;
+    font-size: 16px;
+    -webkit-box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.75);
+}
+.mynav .logo {
+    font-size: 22px;
+    padding-left: 20px;
+}
+.nav-item {
+    
+    padding-right: 20px;
+}
+.nav-menu {
+    position: absolute;
+    height: calc(100vh - 55px);
+    background: rgba(0,0,0,0.6);
+    top: 54px;
+    left: 0px;
+}
+
+.nav-menu .menu-iem{
+    color: #fff;
+    list-style: none;
+    height: 50px;
+    display: block;
+    padding-left: 10px;
+    line-height: 50px;
+}
+.nav-menu .menu-iem:before{
+    padding: 10px;
+}
+.nav-menu .menu-iem:hover{
+    background: lightcoral;
+}
+.separator{
+    height: 0;
+    line-height: 0;
+    _font-size: 0;
+    border-top: #dce1e6 1px solid;
+    overflow: hidden;
+    margin: 5px auto;
+}
+.file-list-wrapper{
+    position: absolute;
+    height: calc(100vh - 55px);
+    background: rgba(0,0,0,0.6);
+    top: 54px;
+    left: 16.7%;
+    border-left: 1px solid lightgray;
+}
+.file-action{
+    border-bottom: #dce1e6 1px solid;
+    height: 65px;
+    line-height: 65px;
+    padding: 0 10px;
+}
+.file-action button {
+    margin-right: 10px;
+}
+.file-list {
+    height: calc(100% - 65px);
+}
+.file-list table {
+    color: #fff;
+    border-bottom: #dce1e6 1px solid;
+}
+.file-list table td{
+    padding-left: 10px !important;
+}
+.file-list thead tr{
+     border-bottom: #dce1e6 1px solid; 
+}
+.file-list thead td:hover{
+    cursor: pointer;
+}
+.file-list thead td:nth-child(n+2){
+    border-right: #dce1e6 1px solid;
+}
+.file-list tr:hover{
+    background: lightcoral;
+}
