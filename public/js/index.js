@@ -1,6 +1,20 @@
 $(function() {
     var preSelected;
     var selected = [];
+
+    function getFileList() {
+        $.getJSON("/fileList", function(results) {
+            console.log(results);
+            // load a template file, then render it with data
+            template.helper('$dealWithSize', function(content) {
+                // 处理字符串...
+                return (parseInt(content) / 1024).toFixed(2) + "KB";
+            });
+            var html = template('fileTemplate', results);
+            $(".file-list tbody").html(html)
+            console.log(html);
+        });
+    }
     $("body").on('contextmenu', ".file-list-item", function(e) {
         e.preventDefault();
         if (selected.length > 1 && selected.indexOf($(e.currentTarget).find("input[type='checkbox']")[0]) !== -1) {
@@ -35,40 +49,35 @@ $(function() {
         console.log(selected);
     });
 
-    $("div[action='open']").click(function(){
+    $("div[action='open']").click(function() {
         alert(selected[0].id);
     });
-     $("div[action='delete']").click(function(){
+    $("div[action='delete']").click(function() {
         var fileNames = [];
-        for(var i = 0; i < selected.length; i++) {
+        for (var i = 0; i < selected.length; i++) {
             fileNames.push(selected[i].id);
         }
         $.ajax({
-            url:"/delete",
-            data:{
-                fileNames:fileNames.join("; ")
+            url: "/delete",
+            data: {
+                fileNames: fileNames.join("; ")
             },
-            type:"post",
-            dataType:"json",
+            type: "post",
+            dataType: "json",
             success: function(data) {
-                if(data.status == "1") {
+                if (data.status == "1") {
                     alert("删除成功!");
                 } else {
                     alert("删除失败!");
                 }
+                getFileList();
             }
+
         });
+
     });
-  
-    $.getJSON("/fileList", function(results) {
-        console.log(results);
-        // load a template file, then render it with data
-        template.helper('$dealWithSize', function(content) {
-            // 处理字符串...
-            return (parseInt(content) / 1024).toFixed(2) + "KB" ;
-        });
-        var html = template('fileTemplate', results);
-        $(".file-list tbody").html(html)
-        console.log(html);
-    });
+
+
+    getFileList();
+
 });
