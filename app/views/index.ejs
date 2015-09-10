@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" type="text/css" href="./tools/easyUI/themes/bootstrap/easyui.css">
     <link rel="stylesheet" type="text/css" href="./tools/easyUI/themes/icon.css">
-    <script type="text/javascript" src="./tools/easyUI/jquery.easyui.min.js"></script>
 </head>
 
 <body class="index_background">
@@ -51,30 +50,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="file-list-item">
-                            <td width="20">
-                                <input type="checkbox" class="select">
-                            </td>
-                            <td>aapp.js</td>
-                            <td>10k</td>
-                            <td>2015-09-10</td>
-                        </tr>
-                        <tr class="file-list-item">
-                            <td width="20">
-                                <input type="checkbox" class="select">
-                            </td>
-                            <td>aapp.js</td>
-                            <td>10k</td>
-                            <td>2015-09-10</td>
-                        </tr>
-                        <tr class="file-list-item">
-                            <td width="20">
-                                <input type="checkbox" class="select">
-                            </td>
-                            <td>aapp.js</td>
-                            <td>10k</td>
-                            <td>2015-09-10</td>
-                        </tr>
+                       
                     </tbody>
                 </table>
             </div>
@@ -82,13 +58,13 @@
         <div style="clear:both"></div>
     </div>
     <div id="mm" class="easyui-menu" style="width:120px;">
-        <div onclick="javascript:alert('new')">打开</div>
+        <div action="open">打开</div>
          <div class="menu-sep"></div>
         <div>重命名</div>
         <div>移动到</div>
         <div>复制到</div>
         <div class="menu-sep"></div>
-        <div>删除</div>
+        <div action="delete">删除</div>
     </div>
     <div id="mm2" class="easyui-menu" style="width:120px;">
         <div>列表视图</div>
@@ -101,9 +77,22 @@
         <div>新建文件夹</div>
         <div>刷新</div>
     </div>
+    <script id = "fileTemplate">
+       {{each fileList as value index}}
+            <tr class="file-list-item">
+                <td width="20">
+                    <input type="checkbox" class="select" id="{{value[8]}}">
+                </td>
+                <td>{{value[8]}}</td>
+                <td>{{$dealWithSize(value[4])}}</td>
+                <td>{{value[5] + value[6] + "日" + value[7]}}</td>
+            </tr>
+       {{/each}}
+    </script>
     <script src="./js/jquery.js"></script>
     <script type="text/javascript" src="./tools/easyUI/jquery.easyui.min.js"></script>
     <script src="./js/bootstrap.js"></script>
+     <script src="./js/template.js"></script>
     <script src="./js/index.js"></script>
 </body>
 

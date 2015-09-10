@@ -3,4 +3,5 @@ var file = require('../controllers/file.server.controller.js');
 module.exports = function(app){
 	app.get("/", file.index);
 	app.get("/fileList", file.fileList);
+	app.post("/delete", file.delete);
 };

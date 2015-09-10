@@ -1,15 +1,18 @@
 $(function() {
     var preSelected;
     var selected = [];
-    $(".file-list-item").bind('contextmenu', function(e) {
+    $("body").on('contextmenu', ".file-list-item", function(e) {
         e.preventDefault();
-        if (selected.length > 1 && selected.indexOf($(this).find("input[type='checkbox']")[0]) !== -1) {
+        if (selected.length > 1 && selected.indexOf($(e.currentTarget).find("input[type='checkbox']")[0]) !== -1) {
 
         } else {
-            while(selected.length) selected.pop().checked = false;
-            $(this).find("input[type='checkbox']")[0].checked = true;
-            if (preSelected) preSelected.find("input[type='checkbox']")[0].checked = false;
-            preSelected = $(this);
+            var current = $(e.currentTarget).find("input[type='checkbox']")[0];
+            while (selected.length) selected.pop().checked = false;
+            selected.push(current);
+            current.checked = true;
+            if (preSelected) preSelected.checked = false;
+            preSelected = e.currentTarget;
+
         }
         $('#mm').menu('show', {
             left: e.pageX,
@@ -26,18 +29,46 @@ $(function() {
         });
         if (!that.checked) selected = [];
     });
-    $(".select").bind("click", function() {
-        if (this.checked) selected.push(this);
-        else selected.splice(selected.indexOf(this), 1);
+    $("body").on("click", ".select", function(e) {
+        if (e.target.checked) selected.push(e.target);
+        else selected.splice(selected.indexOf(e.target), 1);
         console.log(selected);
     });
-    $(".file-list").bind('contextmenu', function(e) {
-        e.preventDefault();
-        $('#mm2').menu('show', {
-            left: e.pageX,
-            top: e.pageY
+
+    $("div[action='open']").click(function(){
+        alert(selected[0].id);
+    });
+     $("div[action='delete']").click(function(){
+        var fileNames = [];
+        for(var i = 0; i < selected.length; i++) {
+            fileNames.push(selected[i].id);
+        }
+        $.ajax({
+            url:"/delete",
+            data:{
+                fileNames:fileNames.join("; ")
+            },
+            type:"post",
+            dataType:"json",
+            success: function(data) {
+                if(data.status == "1") {
+                    alert("删除成功!");
+                } else {
+                    alert("删除失败!");
+                }
+            }
         });
     });
-
-    // $("div[action='rename'")
+  
+    $.getJSON("/fileList", function(results) {
+        console.log(results);
+        // load a template file, then render it with data
+        template.helper('$dealWithSize', function(content) {
+            // 处理字符串...
+            return (parseInt(content) / 1024).toFixed(2) + "KB" ;
+        });
+        var html = template('fileTemplate', results);
+        $(".file-list tbody").html(html)
+        console.log(html);
+    });
 });
