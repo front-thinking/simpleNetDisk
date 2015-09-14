@@ -44,10 +44,6 @@ $(function () {
         else selected.splice(selected.indexOf(e.target), 1);
         console.log(selected);
     });
-
-    $("div[action='open']").click(function () {
-        alert(selected[0].id);
-    });
     $("div[action='delete']").click(function () {
         var fileNames = [];
         for (var i = 0; i < selected.length; i++) {
@@ -62,9 +58,23 @@ $(function () {
             dataType: "json",
             success: function (data) {
                 if (data.status == "1") {
-                    alert("删除成功!");
+                    dialog({
+                        title: '提示',
+                        content: '删除成功！',
+                        okValue: '确定',
+                        width: 250,
+                        ok: function () {
+                        }
+                    }).showModal();
                 } else {
-                    alert("删除失败!");
+                    dialog({
+                        title: '提示',
+                        content: '删除失败！',
+                        okValue: '确定',
+                        width: 250,
+                        ok: function () {
+                        }
+                    }).showModal();
                 }
                 table.ajax.url('/fileList?dir=' + workDir).load();
             }
@@ -79,6 +89,27 @@ $(function () {
         $(selected[0]).parent().parent().find(".fa").removeClass("hide");
     });
 
+    $("div[action='moveto']").click(function () {
+        var d = dialog({
+            title: '移动到',
+            content: '按钮回调函数返回 false 则不许关闭',
+            okValue: '确定',
+            ok: function () {
+                this.title('提交中…');
+                return false;
+            },
+            cancelValue: '取消',
+            cancel: function () { }
+        });
+        d.showModal();
+    });
+     $("div[action='download']").click(function () {
+       var fileNames = [];
+        for (var i = 0; i < selected.length; i++) {
+            fileNames.push(workDir + selected[i].id);
+        }
+        window.location.href = "/download?fileNames=" +  fileNames.join("; ");
+    });
     $("body").on("click", " .fa", function () {
         var file = $(this).parent().find("span");
         if ($(this).hasClass("fa-check")) {
@@ -93,7 +124,25 @@ $(function () {
                 type: "post",
                 dataType: "json",
                 success: function (data) {
-
+                    if (data.status == "1") {
+                        dialog({
+                            title: '提示',
+                            content: '重命名成功！',
+                            okValue: '确定',
+                            width: 250,
+                            ok: function () {
+                            }
+                        }).showModal();
+                    } else {
+                        dialog({
+                            title: '提示',
+                            content: '重命名失败！',
+                            okValue: '确定',
+                            width: 250,
+                            ok: function () {
+                            }
+                        }).showModal();
+                    }
                 }
             });
         }
@@ -103,13 +152,13 @@ $(function () {
     $("body").on("click", ".dir", function () {
         var dir = $(this).text().trim() + "/";
         workDir += dir;
-        workDir = workDir.replace(/\/+/g,"\/");
+        workDir = workDir.replace(/\/+/g, "\/");
         generateBreadcrumbNav(workDir);
         table.ajax.url('/fileList?dir=' + workDir).load();
     });
     $("body").on("click", ".breadcrumb-nav", function () {
         var dir = $(this).attr("href").replace(/^#/, "") + "/";
-        workDir = dir.replace(/\/+/g,"\/");;
+        workDir = dir.replace(/\/+/g, "\/");;
         generateBreadcrumbNav(workDir);
         table.ajax.url('/fileList?dir=' + workDir).load();
     });
@@ -187,7 +236,7 @@ $(function () {
     });
     
     
-// 文件上传
+    // 文件上传
     var $list = $('#thelist'),
         $btn = $('#ctlBtn'),
         state = 'pending',

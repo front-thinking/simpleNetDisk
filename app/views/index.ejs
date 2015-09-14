@@ -12,8 +12,8 @@
     <link rel="stylesheet" type="text/css" href="./tools/easyUI/themes/icon.css">
     <link rel="stylesheet" href="./css/dataTables.bootstrap.css">
     <link rel="stylesheet" type="text/css" href="./css/webuploader.css">
+    <link rel="stylesheet" type="text/css" href="./css/ui-dialog.css">
 </head>
-
 <body class="">
     <nav class="navbar navbar-inverse navbar-custom" role="navigation">
         <div class="container">
@@ -25,7 +25,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/">书 库</a>
+                <a class="navbar-brand" href="/">在线文件管理系统</a>
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
@@ -76,12 +76,10 @@
                     </tbody>
                 </table>
                 <div class="file-action">
-                    <button class="btn btn-default"><i class="fa fa-plus"></i>&nbsp;新建文件夹</button>
                      <div id="uploader" class="wu-example">
                         <!--用来存放文件信息-->
                         <div class="btns">
                             <div id="picker"><i class="fa fa-upload"></i>&nbsp;上传文件</div>
-                            <button id="ctlBtn" class="btn btn-default">开始上传</button>
                         </div>
                     </div>
                      <div id="thelist" class="uploader-list"></div>
@@ -92,24 +90,11 @@
    
 
     <div id="mm" class="easyui-menu" style="width:120px;display:none">
-        <div action="open">打开</div>
-        <div class="menu-sep"></div>
         <div action="rename">重命名</div>
-        <div>移动到</div>
-        <div>复制到</div>
         <div class="menu-sep"></div>
         <div action="delete">删除</div>
-    </div>
-    <div id="mm2" class="easyui-menu" style="width:120px;display:none">
-        <div>列表视图</div>
-        <div>略缩图视图</div>
         <div class="menu-sep"></div>
-        <div>按大小排序</div>
-        <div>按时间排序</div>
-        <div>按文件名排序</div>
-        <div class="menu-sep"></div>
-        <div>新建文件夹</div>
-        <div>刷新</div>
+        <div action="download">下载</div>
     </div>
     <script src="./js/jquery.js"></script>
     <script type="text/javascript" src="./tools/easyUI/jquery.easyui.min.js"></script>
@@ -117,6 +102,7 @@
     <script src="./js/jquery.dataTables.js"></script>
     <script src="./js/dataTables.bootstrap.js"></script>
     <script type="text/javascript" src="./js/webuploader.min.js"></script>
+    <script src="./js/dialog.js"></script>
     <script src="./js/index.js"></script>
 </body>
 

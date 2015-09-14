@@ -7,5 +7,6 @@ module.exports = function(app){
 	app.get("/fileList", file.fileList);
 	app.post("/delete", file.delete);
 	app.post("/rename", file.rename);
-	app.post("/upload",upload.single('myfile'), file.upload)
+	app.post("/upload",upload.single('myfile'), file.upload);
+	app.get("/download", file.download);
 };

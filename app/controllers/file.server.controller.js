@@ -86,3 +86,9 @@ exports.upload = function (req, res, next) {
 		}
 	});
 };
+exports.download = function(req, res, next){
+	var fileNames = req.query.fileNames.split("; ");
+	for (var i = 0; i < fileNames.length; i++) {
+		res.download(homeDir + fileNames[i]);
+	}
+}
