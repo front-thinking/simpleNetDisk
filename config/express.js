@@ -5,7 +5,6 @@ var compress = require("compression");
 var bodyParser = require("body-parser");
 var methodOverride = require("method-override");
 var session = require("express-session");
-
 module.exports = function () {
 	var app = express();
 	if (process.env.NODE_ENV == "development") {

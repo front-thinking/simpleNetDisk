@@ -1,21 +1,17 @@
-$(function() {
+$(function () {
     var preSelected;
     var selected = [];
+    window.workDir = "/";
+    function generateBreadcrumbNav(workDir) {
+        var nav = workDir.replace(/\/$/, "").split("/");
+        var breadcrumb = "";
+        for (var i = 0; i < nav.length; i++) {
 
-    function getFileList() {
-        $.getJSON("/fileList", function(results) {
-            console.log(results);
-            // load a template file, then render it with data
-            template.helper('$dealWithSize', function(content) {
-                // 处理字符串...
-                return (parseInt(content) / 1024).toFixed(2) + "KB";
-            });
-            var html = template('fileTemplate', results);
-            $(".file-list tbody").html(html)
-            console.log(html);
-        });
+            breadcrumb += '<li><a class="breadcrumb-nav" href="#' + (i === 0 ? "/" : nav.slice(0, i + 1).join("/")) + '">' + (i === 0 ? "Home" : nav[i]) + "</a></li>";
+        }
+        $(".breadcrumb").html(breadcrumb);
     }
-    $("body").on('contextmenu', ".file-list-item", function(e) {
+    $("body").on('contextmenu', "#file-list tbody tr", function (e) {
         e.preventDefault();
         if (selected.length > 1 && selected.indexOf($(e.currentTarget).find("input[type='checkbox']")[0]) !== -1) {
 
@@ -35,27 +31,27 @@ $(function() {
         return false;
     });
 
-    $(".select-all").bind("click", function() {
+    $(".select-all").bind("click", function () {
         var that = this;
-        $(".select").each(function() {
+        $(".select").each(function () {
             this.checked = that.checked;
             selected.push(this);
         });
         if (!that.checked) selected = [];
     });
-    $("body").on("click", ".select", function(e) {
+    $("body").on("click", ".select", function (e) {
         if (e.target.checked) selected.push(e.target);
         else selected.splice(selected.indexOf(e.target), 1);
         console.log(selected);
     });
 
-    $("div[action='open']").click(function() {
+    $("div[action='open']").click(function () {
         alert(selected[0].id);
     });
-    $("div[action='delete']").click(function() {
+    $("div[action='delete']").click(function () {
         var fileNames = [];
         for (var i = 0; i < selected.length; i++) {
-            fileNames.push(selected[i].id);
+            fileNames.push(workDir + selected[i].id);
         }
         $.ajax({
             url: "/delete",
@@ -64,20 +60,216 @@ $(function() {
             },
             type: "post",
             dataType: "json",
-            success: function(data) {
+            success: function (data) {
                 if (data.status == "1") {
                     alert("删除成功!");
                 } else {
                     alert("删除失败!");
                 }
-                getFileList();
+                table.ajax.url('/fileList?dir=' + workDir).load();
             }
 
         });
 
     });
 
+    $("div[action='rename']").click(function () {
+        var file = $(selected[0]).parent().parent().find("span").attr("contenteditable", "true").focus();
+        file.data("filename", file.html());
+        $(selected[0]).parent().parent().find(".fa").removeClass("hide");
+    });
 
-    getFileList();
+    $("body").on("click", " .fa", function () {
+        var file = $(this).parent().find("span");
+        if ($(this).hasClass("fa-check")) {
+            var originalName = workDir + file.data("filename");
+            var currentName = workDir + file.text();
+            $.ajax({
+                url: "/rename",
+                data: {
+                    originalName: originalName.trim(),
+                    currentName: currentName.trim()
+                },
+                type: "post",
+                dataType: "json",
+                success: function (data) {
+
+                }
+            });
+        }
+        file.removeAttr("contenteditable");
+        $(this).parent().find(".action.fa").addClass("hide");
+    });
+    $("body").on("click", ".dir", function () {
+        var dir = $(this).text().trim() + "/";
+        workDir += dir;
+        workDir = workDir.replace(/\/+/g,"\/");
+        generateBreadcrumbNav(workDir);
+        table.ajax.url('/fileList?dir=' + workDir).load();
+    });
+    $("body").on("click", ".breadcrumb-nav", function () {
+        var dir = $(this).attr("href").replace(/^#/, "") + "/";
+        workDir = dir.replace(/\/+/g,"\/");;
+        generateBreadcrumbNav(workDir);
+        table.ajax.url('/fileList?dir=' + workDir).load();
+    });
+    var table = $('#file-list').DataTable({
+        "ajax": {
+            "url": "/fileList",
+            "data": {
+
+            },
+            "type": "get",
+            "dataSrc": "fileList",
+        },
+        "responsive": true,
+        "columns": [{
+            "data": 8,
+            "width": "20px"
+        },
+            {
+                "data": 8
+            },
+            {
+                "data": 4,
+                "width": "86px"
+            }, {}],
+        "aaSorting": [[1, "desc"]],
+        "columnDefs": [{
+            "targets": 0,
+            "data": null,
+            "bSortable": false,
+            "render": function (data, type, full, meta) {
+                return '<input type="checkbox" class="select"' + 'id="' + data + '">';
+            }
+        }, {
+                "targets": 1,
+                "data": null,
+                "render": function (data, type, full, meta) {
+                    if (full[0][0] == "d") {
+                        return '<i class="fa fa-folder-o"></i>&nbsp;&nbsp;<span class="filename"><a href = "javascript:void(0)" class="dir">' + data + '</a></span>' +
+                            '<i class="fa fa-check hide action"></i><i class="fa fa-times hide action"></i>'
+                    } else {
+                        return '<i class="fa fa-file-o"></i>&nbsp;&nbsp;<span class="filename">' + data + '</span>' + '<i class="fa fa-check hide action"></i><i class="fa fa-times hide action"></i>';
+                    }
+
+                }
+            },
+            {
+                "targets": 2,
+                "data": null,
+                "render": function (data, type, full, meta) {
+                    return (parseInt(data) / 1024).toFixed(2) + "KB";
+                }
+            }, {
+                "targets": 3,
+                "data": null,
+                "render": function (data, type, full, meta) {
+                    return full[5] + full[6] + "日" + full[7];
+                }
+            }],
+        "oLanguage": {
+            "sLengthMenu": "每页显示 _MENU_ 条记录",
+            "sZeroRecords": "对不起，查询不到任何相关数据",
+            "sInfo": "当前显示 _START_ 到 _END_ 条，共 _TOTAL_ 条记录",
+            "infoEmtpy": "找不到相关数据",
+            "sInfoFiltered": "数据表中共为 _MAX_ 条记录",
+            "sProcessing": "正在加载中...",
+            "sSearch": "搜索：",
+            "sUrl": "", // 多语言配置文件，可将oLanguage的设置放在一个txt文件中，例：Javascript/datatable/dtCH.txt
+            "oPaginate": {
+                "sFirst": "首页",
+                "sPrevious": " 前一页 ",
+                "sNext": " 后一页 ",
+                "sLast": " 尾页 "
+            }
+        }
+    });
+    
+    
+// 文件上传
+    var $list = $('#thelist'),
+        $btn = $('#ctlBtn'),
+        state = 'pending',
+        uploader;
+    uploader = WebUploader.create({
+
+        // 不压缩image
+        resize: false,
+        auto: true,
+        // swf文件路径
+        swf: '/js/Uploader.swf',
+
+        // 文件接收服务端。
+        server: '/upload',
+
+        // 选择文件的按钮。可选。
+        // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+        pick: '#picker',
+        fileVal: 'myfile',
+        formData: {
+            dir: ""
+        }
+    });
+
+    // 当有文件添加进来的时候
+    uploader.on('fileQueued', function (file) {
+        $list.append('<div id="' + file.id + '" class="item">' +
+            '<h4 class="info">' + file.name + '</h4>' +
+            '<p class="state">等待上传...</p>' +
+            '</div>');
+    });
+
+    // 文件上传过程中创建进度条实时显示。
+    uploader.on('uploadProgress', function (file, percentage) {
+        var $li = $('#' + file.id),
+            $percent = $li.find('.progress .progress-bar');
+
+        // 避免重复创建
+        if (!$percent.length) {
+            $percent = $('<div class="progress progress-striped active">' +
+                '<div class="progress-bar" role="progressbar" style="width: 0%">' +
+                '</div>' +
+                '</div>').appendTo($li).find('.progress-bar');
+        }
+
+        $li.find('p.state').text('上传中');
+
+        $percent.css('width', percentage * 100 + '%');
+    });
+    uploader.on('uploadBeforeSend', function (block, data) {
+        // 修改data可以控制发送哪些携带数据。
+        data.dir = window.workDir;
+
+    });
+    uploader.on('uploadSuccess', function (file) {
+        $('#' + file.id).find('p.state').text('已上传');
+        table.ajax.url('/fileList?dir=' + workDir).load();
+    });
+
+    uploader.on('uploadError', function (file) {
+        $('#' + file.id).find('p.state').text('上传出错');
+    });
+
+    uploader.on('uploadComplete', function (file) {
+        $('#' + file.id).find('.progress').fadeOut();
+    });
+
+    uploader.on('all', function (type) {
+        if (type === 'startUpload') {
+            state = 'uploading';
+        } else if (type === 'stopUpload') {
+            state = 'paused';
+        } else if (type === 'uploadFinished') {
+            state = 'done';
+        }
+
+        if (state === 'uploading') {
+            $btn.text('暂停上传');
+        } else {
+            $btn.text('开始上传');
+        }
+    });
 
 });
+

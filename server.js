@@ -1,4 +1,6 @@
 process.env.NODE_ENV  = process.env.NODE_ENV || "development";
+var config = require("./config/config");
+config.basePath = __dirname;
 var express = require("./config/express");
 var app = express();
 app.listen(3000);

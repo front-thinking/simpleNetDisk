@@ -24,6 +24,13 @@ $(function() {
 			"render": function(data, type, full, meta) {
 				return '<a target = "_self" href ="/book?_id=' + full._id + '">' + full.bookName + '</a>';
 			} //给新闻标题加上链接
+		},
+		[{
+			"targets": 1,
+			"data": null,
+			"render": function(data, type, full, meta) {
+				return '<a target = "_self" href ="/book?_id=' + full._id + '">' + full.bookName + '</a>';
+			} //给新闻标题加上链接
 		}],
 		"oLanguage" : {
 			"sLengthMenu" : "每页显示 _MENU_ 条记录",

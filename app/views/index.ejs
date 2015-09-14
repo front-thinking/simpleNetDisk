@@ -10,35 +10,57 @@
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" type="text/css" href="./tools/easyUI/themes/bootstrap/easyui.css">
     <link rel="stylesheet" type="text/css" href="./tools/easyUI/themes/icon.css">
+    <link rel="stylesheet" href="./css/dataTables.bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="./css/webuploader.css">
 </head>
 
-<body class="index_background">
-    <div class="mynav container-fluid">
-        <span class="logo pull-left">网盘</span>
-        <span class="nav-item pull-right">帮助</span>
-        <span class="nav-item pull-right">关于</span>
-    </div>
-    <div class="container-fluid">
-        <div class="col-md-2 nav-menu no-padding">
-            <ul class="no-padding">
-                <li class="menu-iem fa fa-files-o fa-2">全部文件</li>
-                <li class="menu-iem fa fa-file-image-o fa-2">图片</li>
-                <li class="menu-iem fa fa-file-word-o fa-2">文档</li>
-                <li class="menu-iem fa fa-file-video-o fa-2">视频</li>
-                <li class="menu-iem fa fa-file-sound-o fa-2">音乐</li>
-                <li class="separator"></li>
-                <li class="menu-iem fa fa-file-o fa-2">其他</li>
-                <li class="separator"></li>
-                <li class="menu-iem fa fa-trash-o fa-2">回收站</li>
-            </ul>
-        </div>
-        <div class="col-md-10 file-list-wrapper no-padding">
-            <div class="file-action">
-                <button class="btn btn-default"><i class="fa fa-upload"></i>&nbsp;上传文件</button>
-                <button class="btn btn-default"><i class="fa fa-plus"></i>&nbsp;新建文件夹</button>
+<body class="">
+    <nav class="navbar navbar-inverse navbar-custom" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">书 库</a>
             </div>
-            <div class="file-list">
-                <table class="table">
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li class="active">
+                        <a href="/">首页</a>
+                    </li>
+                    <li>
+                        <a href="/#">最新</a>
+                    </li>
+                    <li>
+                        <a href="/#">热门</a>
+                    </li>
+                    <li>
+                        <a href="/#">讨论</a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right ">
+                    <li>
+                        <a href="#">关于</a>
+                    </li>
+                    <li>
+                        <a href="#">帮助</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="#/">Home</a></li>
+        </ol>
+        <div class="col-md-12">
+
+            <div class="file-list-container">
+                <table id="file-list" class="table table-striped table-bordered" cellspacing="0" width="100%">
                     <thead>
                         <tr>
                             <td width="30">
@@ -50,25 +72,37 @@
                         </tr>
                     </thead>
                     <tbody>
-                       
+
                     </tbody>
                 </table>
+                <div class="file-action">
+                    <button class="btn btn-default"><i class="fa fa-plus"></i>&nbsp;新建文件夹</button>
+                     <div id="uploader" class="wu-example">
+                        <!--用来存放文件信息-->
+                        <div class="btns">
+                            <div id="picker"><i class="fa fa-upload"></i>&nbsp;上传文件</div>
+                            <button id="ctlBtn" class="btn btn-default">开始上传</button>
+                        </div>
+                    </div>
+                     <div id="thelist" class="uploader-list"></div>
+                </div>
             </div>
         </div>
-        <div style="clear:both"></div>
     </div>
-    <div id="mm" class="easyui-menu" style="width:120px;">
+   
+
+    <div id="mm" class="easyui-menu" style="width:120px;display:none">
         <div action="open">打开</div>
-         <div class="menu-sep"></div>
-        <div>重命名</div>
+        <div class="menu-sep"></div>
+        <div action="rename">重命名</div>
         <div>移动到</div>
         <div>复制到</div>
         <div class="menu-sep"></div>
         <div action="delete">删除</div>
     </div>
-    <div id="mm2" class="easyui-menu" style="width:120px;">
+    <div id="mm2" class="easyui-menu" style="width:120px;display:none">
         <div>列表视图</div>
-        <div >略缩图视图</div>
+        <div>略缩图视图</div>
         <div class="menu-sep"></div>
         <div>按大小排序</div>
         <div>按时间排序</div>
@@ -77,22 +111,12 @@
         <div>新建文件夹</div>
         <div>刷新</div>
     </div>
-    <script id = "fileTemplate">
-       {{each fileList as value index}}
-            <tr class="file-list-item">
-                <td width="20">
-                    <input type="checkbox" class="select" id="{{value[8]}}">
-                </td>
-                <td>{{value[8]}}</td>
-                <td>{{$dealWithSize(value[4])}}</td>
-                <td>{{value[5] + value[6] + "日" + value[7]}}</td>
-            </tr>
-       {{/each}}
-    </script>
     <script src="./js/jquery.js"></script>
     <script type="text/javascript" src="./tools/easyUI/jquery.easyui.min.js"></script>
     <script src="./js/bootstrap.js"></script>
-     <script src="./js/template.js"></script>
+    <script src="./js/jquery.dataTables.js"></script>
+    <script src="./js/dataTables.bootstrap.js"></script>
+    <script type="text/javascript" src="./js/webuploader.min.js"></script>
     <script src="./js/index.js"></script>
 </body>
 
