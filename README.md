@@ -1,6 +1,6 @@
 # simpleNetDisk
 
-## Quick Guid
+## Quick Guide
 
 1. pull this repository
 
@@ -25,4 +25,6 @@
 
 1. add new file
 
-2. 
+2. del file
+
+3. 
