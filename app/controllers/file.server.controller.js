@@ -11,16 +11,19 @@ exports.index = function (req, res, next) {
 	}); //控制器，用于控制MVC里面的MV
 };
 
+//返回当前目录文件列表
 exports.fileList = function (req, res, next) {
 	var dir;
 	if (req.query.dir) dir = req.query.dir;
-	else dir = "./";
-	exec("ls -lk " + homeDir + dir, function (err, stdout, stderr) {
+	else dir = "";
+	exec("ls -l " + homeDir + dir, function (err, stdout, stderr) {
 		if (!err) {
-			var fileList = stdout.replace(/\n$/, "").split("\n");
+			console.log(stdout);
+			var fileList = stdout.split("\n");
 			fileList.splice(0, 1); // 删除多余信息total
+			fileList.pop();
 			console.log(fileList);
-			for (var i = 0; i < fileList.length; i++) {
+			for (var i = 0, j = fileList.length; i < j; i++) {
 				fileList[i] = fileList[i].match(/[^\s]+/g);
 			}
 			res.json({

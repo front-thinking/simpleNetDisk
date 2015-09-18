@@ -162,6 +162,8 @@ $(function () {
         generateBreadcrumbNav(workDir);
         table.ajax.url('/fileList?dir=' + workDir).load();
     });
+
+    //渲染文件table
     var table = $('#file-list').DataTable({
         "ajax": {
             "url": "/fileList",
