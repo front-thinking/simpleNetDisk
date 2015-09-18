@@ -1,5 +1,7 @@
 # simpleNetDisk
 
+## Quick Guid
+
 1. pull this repository
 
 2. You need install [nodejs](http://www.nodejs.org/) and know a little bit of how to use nodejs
@@ -17,3 +19,10 @@
  ```cmd
    node server.js
  ```
+
+
+## Todo
+
+1. add new file
+
+2. 

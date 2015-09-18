@@ -2,6 +2,8 @@ $(function () {
     var preSelected;
     var selected = [];
     window.workDir = "/";
+
+    //生成文件导航
     function generateBreadcrumbNav(workDir) {
         var nav = workDir.replace(/\/$/, "").split("/");
         var breadcrumb = "";
@@ -11,6 +13,8 @@ $(function () {
         }
         $(".breadcrumb").html(breadcrumb);
     }
+
+    //右键生成菜单
     $("body").on('contextmenu', "#file-list tbody tr", function (e) {
         e.preventDefault();
         if (selected.length > 1 && selected.indexOf($(e.currentTarget).find("input[type='checkbox']")[0]) !== -1) {
@@ -149,6 +153,8 @@ $(function () {
         file.removeAttr("contenteditable");
         $(this).parent().find(".action.fa").addClass("hide");
     });
+
+    //
     $("body").on("click", ".dir", function () {
         var dir = $(this).text().trim() + "/";
         workDir += dir;
@@ -156,6 +162,8 @@ $(function () {
         generateBreadcrumbNav(workDir);
         table.ajax.url('/fileList?dir=' + workDir).load();
     });
+
+    //
     $("body").on("click", ".breadcrumb-nav", function () {
         var dir = $(this).attr("href").replace(/^#/, "") + "/";
         workDir = dir.replace(/\/+/g, "\/");;
