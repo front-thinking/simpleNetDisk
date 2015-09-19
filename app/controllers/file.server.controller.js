@@ -74,6 +74,8 @@ exports.delete = function (req, res, next) {
 		}
 	});
 };
+
+//重命名
 exports.rename = function (req, res, next) {
 	var originalName = homeDir + req.body.originalName.trim();
 	var currentName = homeDir + req.body.currentName.trim();

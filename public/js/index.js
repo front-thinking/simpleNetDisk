@@ -120,10 +120,19 @@ $(function () {
         }
         window.location.href = "/download?fileNames=" +  fileNames.join("; ");
     });
+
+    //重命名
     $("body").on("click", " .fa", function () {
         var file = $(this).parent().find("span");
+
         if ($(this).hasClass("fa-check")) {
-            var originalName = workDir + file.data("filename");
+            var fileData = file.data("filename");
+            var originalName;
+            if (fileData.indexOf("javascript:void(0)") != -1) {
+                originalName = workDir + $(fileData).text();
+            }else {
+                originalName = workDir + fileData;
+            }
             var currentName = workDir + file.text();
             $.ajax({
                 url: "/rename",
@@ -141,6 +150,7 @@ $(function () {
                             okValue: '确定',
                             width: 250,
                             ok: function () {
+                                table.ajax.url('/fileList?dir=' + workDir).load();
                             }
                         }).showModal();
                     } else {
