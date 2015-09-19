@@ -52,6 +52,8 @@ $(function () {
         else selected.splice(selected.indexOf(e.target), 1);
         console.log(selected);
     });
+
+    //删除选中元素
     $("div[action='delete']").click(function () {
         var fileNames = [];
         for (var i = 0; i < selected.length; i++) {
@@ -203,7 +205,11 @@ $(function () {
             "data": null,
             "bSortable": false,
             "render": function (data, type, full, meta) {
-                return '<input type="checkbox" class="select"' + 'id="' + data + '">';
+                if (full[0][0] == "d") {
+                    return '<input type="checkbox" class="select"' + 'id="' + data + '-type-d">';
+                } else {
+                    return '<input type="checkbox" class="select"' + 'id="' + data + '">';
+                }
             }
         }, {
                 "targets": 1,

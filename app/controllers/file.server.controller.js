@@ -35,11 +35,32 @@ exports.fileList = function (req, res, next) {
 
 //删除选中文件
 exports.delete = function (req, res, next) {
-	var fileNames = req.body.fileNames.split("; ");
-	for (var i = 0; i < fileNames.length; i++) {
+	var fileNames = req.body.fileNames.split("; "),
+		fileToDel = [],
+		dirToDel = [];
+
+	//拼接完整路径
+	for (var i = 0, j = fileNames.length; i < j; i++) {
 		fileNames[i] = homeDir + fileNames[i];
 	}
-	exec("rm " + fileNames.join(" "), function (err, stdout, stderr) {
+
+	//区分删除文件还是文件夹
+	for(var i = 0, j = fileNames.length; i < j; i++ ) {
+		if(fileNames[i].indexOf("-type-d") != -1){
+			dirToDel.push(fileNames[i].replace("-type-d",""));
+		}else {
+			fileToDel.push(fileNames[i]);
+		}
+	}
+
+	//拼接删除文件和文件夹命令
+	var fileCmdStr = (fileToDel.length) !== 0 ? "rm " + fileToDel.join(" ") : "";
+	var dirCmdStr = (dirToDel.length) !== 0 ? "rmdir " + dirToDel.join(" ") : "";
+	var delCmd = (fileCmdStr !== "" ? fileCmdStr + " && " : "") + (dirCmdStr !== "" ? dirCmdStr : "");
+
+	console.log(delCmd);
+
+	exec(delCmd, function (err, stdout, stderr) {
 		if (err) {
 			console.log(err);
 			res.json({
