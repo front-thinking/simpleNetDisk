@@ -86,7 +86,9 @@ $(function () {
                         }
                     }).showModal();
                 }
-                table.ajax.url('/fileList?dir=' + workDir).load();
+                table.ajax.url('/fileList?dir=' + workDir).load(function () {
+                    selected = [];
+                });
             }
 
         });
@@ -111,26 +113,23 @@ $(function () {
         $(selected[0]).parent().parent().find(".fa").removeClass("hide");
     });
 
-    $("div[action='moveto']").click(function () {
-        var d = dialog({
-            title: '移动到',
-            content: '按钮回调函数返回 false 则不许关闭',
-            okValue: '确定',
-            ok: function () {
-                this.title('提交中…');
-                return false;
-            },
-            cancelValue: '取消',
-            cancel: function () { }
-        });
-        d.showModal();
-    });
+    //文件下载
      $("div[action='download']").click(function () {
-       var fileNames = [];
-        for (var i = 0; i < selected.length; i++) {
-            fileNames.push(workDir + selected[i].id);
-        }
-        window.location.href = "/download?fileNames=" +  fileNames.join("; ");
+         var fileName;
+         if(selected.length > 1) {
+             dialog({
+                 title: '提示',
+                 content: '只能下载单个文件！',
+                 okValue: '确定',
+                 width: 250,
+                 ok: function () {
+                 }
+             }).showModal();
+             return;
+         }
+         fileName = workDir + selected[0].id;
+
+        window.location.href = "/download?fileName=" +  fileName;
     });
 
     //重命名
@@ -162,7 +161,9 @@ $(function () {
                             okValue: '确定',
                             width: 250,
                             ok: function () {
-                                table.ajax.url('/fileList?dir=' + workDir).load();
+                                table.ajax.url('/fileList?dir=' + workDir).load(function () {
+                                    selected = [];
+                                });
                             }
                         }).showModal();
                     } else {
@@ -182,21 +183,25 @@ $(function () {
         $(this).parent().find(".action.fa").addClass("hide");
     });
 
-    //
+    //打开文件夹并跳转
     $("body").on("click", ".dir", function () {
         var dir = $(this).text().trim() + "/";
         workDir += dir;
         workDir = workDir.replace(/\/+/g, "\/");
         generateBreadcrumbNav(workDir);
-        table.ajax.url('/fileList?dir=' + workDir).load();
+        table.ajax.url('/fileList?dir=' + workDir).load(function () {
+            selected = [];
+        });
     });
 
-    //
+    //生成新的导航并取文件目录
     $("body").on("click", ".breadcrumb-nav", function () {
         var dir = $(this).attr("href").replace(/^#/, "") + "/";
         workDir = dir.replace(/\/+/g, "\/");;
         generateBreadcrumbNav(workDir);
-        table.ajax.url('/fileList?dir=' + workDir).load();
+        table.ajax.url('/fileList?dir=' + workDir).load(function () {
+            selected = [];
+        });
     });
 
     //渲染文件table
@@ -335,7 +340,9 @@ $(function () {
     });
     uploader.on('uploadSuccess', function (file) {
         $('#' + file.id).find('p.state').text('已上传');
-        table.ajax.url('/fileList?dir=' + workDir).load();
+        table.ajax.url('/fileList?dir=' + workDir).load(function () {
+            selected = [];
+        });
     });
 
     uploader.on('uploadError', function (file) {

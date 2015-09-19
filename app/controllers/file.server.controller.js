@@ -55,8 +55,16 @@ exports.delete = function (req, res, next) {
 
 	//拼接删除文件和文件夹命令
 	var fileCmdStr = (fileToDel.length) !== 0 ? "rm " + fileToDel.join(" ") : "";
-	var dirCmdStr = (dirToDel.length) !== 0 ? "rmdir " + dirToDel.join(" ") : "";
-	var delCmd = (fileCmdStr !== "" ? fileCmdStr + " && " : "") + (dirCmdStr !== "" ? dirCmdStr : "");
+	var dirCmdStr = (dirToDel.length) !== 0 ? "rm -rf " + dirToDel.join(" ") : "";
+	var delCmd;
+	if ( fileCmdStr == "" ) {
+		delCmd = dirCmdStr;
+	} else if ( dirCmdStr == "" ) {
+		delCmd = fileCmdStr;
+	} else {
+		delCmd = dirCmdStr + " && " + fileCmdStr;
+	}
+
 
 	console.log(delCmd);
 
@@ -113,9 +121,33 @@ exports.upload = function (req, res, next) {
 		}
 	});
 };
+
+//文件下载
 exports.download = function(req, res, next){
-	var fileNames = req.query.fileNames.split("; ");
-	for (var i = 0; i < fileNames.length; i++) {
-		res.download(homeDir + fileNames[i]);
+	var fileName = req.query.fileName.slice();
+
+	//下载单个文件夹
+	if (fileName.indexOf("-type-d") != -1) {
+		var dirName = fileName.slice(0, fileName.indexOf("-type-d"));
+		var zipfileName = dirName.slice(1).slice(dirName.lastIndexOf("/"));
+		var cdCmd = "cd " + homeDir + dirName.slice(0, dirName.lastIndexOf("/"));
+		var zipCmd = "zip -r " + zipfileName + ".zip " + zipfileName + "/";
+		var cdAndZipCmd = cdCmd + " && " + zipCmd;
+		console.log(cdAndZipCmd);
+		exec(cdAndZipCmd, function (err, stdout, stderr) {
+			if (err) {
+				console.log(err);
+			} else {
+				res.download(homeDir + dirName + ".zip", function (err) {
+					if (err) return;
+					exec("rm " + homeDir + dirName + ".zip");//delete the zipfile generated
+				});
+			}
+		});
+
+	} else {
+		//下载单个文件
+		res.download(homeDir + fileName);
 	}
+
 }
