@@ -93,7 +93,19 @@ $(function () {
 
     });
 
+    //重命名可编辑
     $("div[action='rename']").click(function () {
+        if(selected.length > 1) {
+            dialog({
+                title: '提示',
+                content: '只能重命名单个文件！',
+                okValue: '确定',
+                width: 250,
+                ok: function () {
+                }
+            }).showModal();
+            return;
+        }
         var file = $(selected[0]).parent().parent().find("span").attr("contenteditable", "true").focus();
         file.data("filename", file.html());
         $(selected[0]).parent().parent().find(".fa").removeClass("hide");
