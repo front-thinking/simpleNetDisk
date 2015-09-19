@@ -33,6 +33,7 @@ exports.fileList = function (req, res, next) {
 	});
 };
 
+//删除选中文件
 exports.delete = function (req, res, next) {
 	var fileNames = req.body.fileNames.split("; ");
 	for (var i = 0; i < fileNames.length; i++) {

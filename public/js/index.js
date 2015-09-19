@@ -1,7 +1,7 @@
 $(function () {
-    var preSelected;
-    var selected = [];
-    window.workDir = "/";
+    var preSelected;//
+    var selected = [];//存放选中文件元素
+    window.workDir = "/";//当前工作目录
 
     //生成文件导航
     function generateBreadcrumbNav(workDir) {
@@ -35,14 +35,18 @@ $(function () {
         return false;
     });
 
+    //增加或者去除选中元素
     $(".select-all").bind("click", function () {
         var that = this;
+        selected = [];
         $(".select").each(function () {
             this.checked = that.checked;
-            selected.push(this);
+            if(that.checked) selected.push(this);
         });
-        if (!that.checked) selected = [];
+        console.log(selected);
     });
+
+    //增加或者去除选中元素
     $("body").on("click", ".select", function (e) {
         if (e.target.checked) selected.push(e.target);
         else selected.splice(selected.indexOf(e.target), 1);
