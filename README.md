@@ -39,7 +39,7 @@
 
 8. support add new file
 
-9. support add new folder
+9. ~~support add new folder~~
 
 10. support download mutiple files and folders
 

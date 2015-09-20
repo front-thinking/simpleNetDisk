@@ -113,6 +113,43 @@ $(function () {
         $(selected[0]).parent().parent().find(".fa").removeClass("hide");
     });
 
+
+    $("div[action='newfolder']").click(function () {
+        $.ajax({
+            url: "/new",
+            data: {
+                dir: workDir
+            },
+            type: "post",
+            dataType: "json",
+            success: function (data) {
+                if (data.status == "1") {
+                    dialog({
+                        title: '提示',
+                        content: '创建成功！',
+                        okValue: '确定',
+                        width: 250,
+                        ok: function () {
+                        }
+                    }).showModal();
+                } else {
+                    dialog({
+                        title: '提示',
+                        content: '创建失败！',
+                        okValue: '确定',
+                        width: 250,
+                        ok: function () {
+                        }
+                    }).showModal();
+                }
+                table.ajax.url('/fileList?dir=' + workDir).load(function () {
+                    selected = [$("#newfolder-type-d")];
+                    $("div[action='rename']").trigger("click");
+                });
+            }
+        });
+    });
+
     //文件下载
      $("div[action='download']").click(function () {
          var fileName;

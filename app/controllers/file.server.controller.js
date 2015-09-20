@@ -33,6 +33,26 @@ exports.fileList = function (req, res, next) {
 	});
 };
 
+exports.newfolder = function (req, res, next) {
+	var dir = req.body.dir ? req.body.dir : "";
+	console.log(dir);
+	var mkdirCmd = "mkdir " + homeDir + dir + "newfolder";
+	exec(mkdirCmd, function (err, stdout, stderr) {
+		if (err) {
+			console.log(err);
+			res.json({
+				status: "0"
+			});
+		} else {
+			res.json({
+				status: "1"
+			});
+			console.log(stdout);
+		}
+	});
+
+};
+
 //删除选中文件
 exports.delete = function (req, res, next) {
 	var fileNames = req.body.fileNames.split("; "),
