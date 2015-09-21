@@ -95,6 +95,59 @@ $(function () {
 
     });
 
+
+    //复制选中元素
+    $("div[action='copy']").click(function () {
+
+        if(selected.length > 1) {
+            dialog({
+                title: '提示',
+                content: '只能复制单个文件！',
+                okValue: '确定',
+                width: 250,
+                ok: function () {
+                }
+            }).showModal();
+            return;
+        }
+
+
+        $.ajax({
+            url: "/copy",
+            data: {
+                fileName: selected[0].id
+            },
+            type: "post",
+            dataType: "json",
+            success: function (data) {
+                if (data.status == "1") {
+                    dialog({
+                        title: '提示',
+                        content: '复制成功！',
+                        okValue: '确定',
+                        width: 250,
+                        ok: function () {
+                        }
+                    }).showModal();
+                } else {
+                    dialog({
+                        title: '提示',
+                        content: '复制失败！',
+                        okValue: '确定',
+                        width: 250,
+                        ok: function () {
+                        }
+                    }).showModal();
+                }
+
+                table.ajax.url('/fileList?dir=' + workDir).load(function () {
+                    selected = [$("#newfolder-type-d")];
+                });
+            }
+        });
+
+    });
+
     //重命名可编辑
     $("div[action='rename']").click(function () {
         if(selected.length > 1) {
@@ -112,7 +165,6 @@ $(function () {
         file.data("filename", file.html());
         $(selected[0]).parent().parent().find(".fa").removeClass("hide");
     });
-
 
     $("div[action='newfolder']").click(function () {
         $.ajax({

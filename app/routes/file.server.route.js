@@ -10,4 +10,5 @@ module.exports = function(app){
 	app.post("/upload",upload.single('myfile'), file.upload);
 	app.get("/download", file.download);
 	app.post("/new", file.newfolder);
+	app.post("/copy", file.copy);
 };

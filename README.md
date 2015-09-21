@@ -37,7 +37,7 @@
 
 7. ~~support upload file~~
 
-8. support add new file
+8. support copy new file
 
 9. ~~support add new folder~~
 

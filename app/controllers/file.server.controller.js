@@ -103,6 +103,40 @@ exports.delete = function (req, res, next) {
 	});
 };
 
+//复制选中文件
+exports.copy = function (req, res, next) {
+
+	var originalFile = homeDir + req.body.fileName;
+
+	var destFile, copyCmd;
+
+	if (originalFile.indexOf("-type-d") != -1) {
+		destFile = originalFile.replace("-type-d", "副本");
+		originalFile = originalFile.replace("-type-d", "");
+		copyCmd = "cp -av " + originalFile + " " + destFile;
+	} else {
+		originalFile = originalFile.split(".");
+		destFile = originalFile[0] + "副本." + originalFile[1];
+		originalFile = originalFile.join(".");
+		copyCmd = "cp " + originalFile + " " + destFile
+	}
+
+	exec(copyCmd, function (err, stdout, stderr) {
+		if (err) {
+			console.log(err);
+			res.json({
+				status: "0"
+			});
+		} else {
+			res.json({
+				status: "1"
+			});
+			console.log(stdout);
+		}
+	});
+
+};
+
 //重命名
 exports.rename = function (req, res, next) {
 	var originalName = homeDir + req.body.originalName.trim();
